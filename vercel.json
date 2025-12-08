@@ -1,0 +1,155 @@
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvTemplate {
+  [key: string]: string | undefined;
+}
+
+interface HeaderRule {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  ignoreUrlParametersMatching?: string[];
+  immutableFiles?: string[];
+  cacheControl?: { regexPattern: string; headers: { "Cache-Control": string } };
+}
+
+interface FrameworkSettings {
+  vercel?: Record<string, any>;
+  netlify?: Record<string, any>;
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvTemplate;
+  redirects: Array<{ source: string; destination: string; statusCode: number }>;
+  headers: Array<HeaderRule>;
+  cacheStrategies: CacheStrategy[];
+  frameworkSettings: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build && next export",
+    output: ".out"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_STRIPE_KEY: process.env.NEXT_PUBLIC_STRIPE_KEY
+  },
+  redirects: [
+    { source: "/old-url", destination: "/new-url", statusCode: 301 }
+  ],
+  headers: [
+    {
+      source: "/api/:path*",
+      headers: [
+        { key: "Access-Control-Allow-Credentials", value: "true" },
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Vary", value: "Origin" }
+      ]
+    }
+  ],
+  cacheStrategies: [
+    {
+      ignoreUrlParametersMatching: [".+"],
+      immutableFiles: ["*.{js,css,ico,png,jpg,gif,webp,map}"]
+    },
+    {
+      cacheControl: [
+        { regexPattern: "^/api/", headers: { "Cache-Control": "s-maxage=1, stale-while-revalidate=60" } }
+      ]
+    }
+  ],
+  frameworkSettings: {
+    vercel: {
+      buildCommand: "next build",
+      startCommand: "next start"
+    },
+    netlify: {
+      functions: ".next/serverless-functions"
+    }
+  }
+};
+
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvTemplate {
+  [key: string]: string | undefined;
+}
+
+interface HeaderRule {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  ignoreUrlParametersMatching?: string[];
+  immutableFiles?: string[];
+  cacheControl?: { regexPattern: string; headers: { "Cache-Control": string } };
+}
+
+interface FrameworkSettings {
+  vercel?: Record<string, any>;
+  netlify?: Record<string, any>;
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvTemplate;
+  redirects: Array<{ source: string; destination: string; statusCode: number }>;
+  headers: Array<HeaderRule>;
+  cacheStrategies: CacheStrategy[];
+  frameworkSettings: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build && next export",
+    output: ".out"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_STRIPE_KEY: process.env.NEXT_PUBLIC_STRIPE_KEY
+  },
+  redirects: [
+    { source: "/old-url", destination: "/new-url", statusCode: 301 }
+  ],
+  headers: [
+    {
+      source: "/api/:path*",
+      headers: [
+        { key: "Access-Control-Allow-Credentials", value: "true" },
+        { key: "Access-Control-Allow-Origin", value: "*" },
+        { key: "Vary", value: "Origin" }
+      ]
+    }
+  ],
+  cacheStrategies: [
+    {
+      ignoreUrlParametersMatching: [".+"],
+      immutableFiles: ["*.{js,css,ico,png,jpg,gif,webp,map}"]
+    },
+    {
+      cacheControl: [
+        { regexPattern: "^/api/", headers: { "Cache-Control": "s-maxage=1, stale-while-revalidate=60" } }
+      ]
+    }
+  ],
+  frameworkSettings: {
+    vercel: {
+      buildCommand: "next build",
+      startCommand: "next start"
+    },
+    netlify: {
+      functions: ".next/serverless-functions"
+    }
+  }
+};
